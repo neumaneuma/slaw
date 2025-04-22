@@ -19,3 +19,13 @@ module "cloudtrail" {
   trail_name  = "permissions-audit-trail"
   bucket_name = "cloudtrail-audit-logs-${random_uuid.uuid.result}"
 }
+
+module "cloudformation" {
+  source = "../labs/cloudformation"
+  region = "us-east-1"
+}
+
+module "cloudformation2" {
+  source = "../labs/cloudformation"
+  region = "us-west-2"
+}
