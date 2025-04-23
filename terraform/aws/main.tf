@@ -29,3 +29,7 @@ module "cloudformation2" {
   source = "../labs/cloudformation"
   region = "us-west-2"
 }
+
+module "cloudwatch" {
+  source = "../labs/cloudwatch"
+}
