@@ -26,3 +26,9 @@ resource "aws_iam_role_policy_attachment" "ssm_managed" {
   role       = aws_iam_role.ssm_instance.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
+
+# Necessary to grant role permission to access EC2 instance
+# resource "aws_iam_instance_profile" "test_profile" {
+#   name = "test_profile"
+#   role = aws_iam_role.role.name
+# }
