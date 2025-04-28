@@ -33,3 +33,7 @@ module "cloudformation2" {
 module "cloudwatch" {
   source = "../labs/cloudwatch"
 }
+
+module "iam" {
+  source = "../labs/iam"
+}
