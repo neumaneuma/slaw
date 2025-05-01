@@ -38,3 +38,7 @@ module "iam" {
   source                   = "../labs/iam"
   cloudtrail_s3_bucket_arn = module.cloudtrail.cloudtrail_s3_bucket_arn
 }
+
+module "organizations" {
+  source = "../labs/organizations"
+}
