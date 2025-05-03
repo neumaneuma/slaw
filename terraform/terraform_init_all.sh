@@ -4,6 +4,7 @@
 DIRS=(
     "aws"
     "state"
+    "security-audit"
 )
 
 
