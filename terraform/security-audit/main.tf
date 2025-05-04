@@ -13,62 +13,62 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "cloudtrail-audit-logs-${random_uuid.uuid.result}"
 }
 
-resource "aws_s3_bucket_policy" "allow_public_access" {
-  bucket = aws_s3_bucket.bucket.id
-  policy = data.aws_iam_policy_document.allow_public_access.json
-}
-
 resource "aws_s3_bucket_public_access_block" "bpa" {
   bucket = aws_s3_bucket.bucket.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
-data "aws_iam_policy_document" "allow_public_access" {
-  statement {
-    sid    = "PublicReadViaIPAddress"
-    effect = "Allow"
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
+# resource "aws_s3_bucket_policy" "allow_public_access" {
+#   bucket = aws_s3_bucket.bucket.id
+#   policy = data.aws_iam_policy_document.allow_public_access.json
+# }
 
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
-    ]
+# data "aws_iam_policy_document" "allow_public_access" {
+#   statement {
+#     sid    = "PublicReadViaIPAddress"
+#     effect = "Allow"
+#     principals {
+#       type        = "*"
+#       identifiers = ["*"]
+#     }
 
-    resources = [
-      aws_s3_bucket.bucket.arn,
-      "${aws_s3_bucket.bucket.arn}/*",
-    ]
+#     actions = [
+#       "s3:GetObject",
+#       "s3:ListBucket",
+#     ]
 
-    condition {
-      test     = "IpAddress"
-      variable = "aws:SourceIp"
-      values   = ["0.0.0.0/0"]
-    }
-  }
+#     resources = [
+#       aws_s3_bucket.bucket.arn,
+#       "${aws_s3_bucket.bucket.arn}/*",
+#     ]
 
-  statement {
-    sid    = "PublicReadViaAllUsers"
-    effect = "Allow"
-    principals {
-      type        = "*"
-      identifiers = ["*"]
-    }
+#     condition {
+#       test     = "IpAddress"
+#       variable = "aws:SourceIp"
+#       values   = ["0.0.0.0/0"]
+#     }
+#   }
 
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
-    ]
+#   statement {
+#     sid    = "PublicReadViaAllUsers"
+#     effect = "Allow"
+#     principals {
+#       type        = "*"
+#       identifiers = ["*"]
+#     }
 
-    resources = [
-      aws_s3_bucket.bucket.arn,
-      "${aws_s3_bucket.bucket.arn}/*",
-    ]
-  }
-}
+#     actions = [
+#       "s3:GetObject",
+#       "s3:ListBucket",
+#     ]
+
+#     resources = [
+#       aws_s3_bucket.bucket.arn,
+#       "${aws_s3_bucket.bucket.arn}/*",
+#     ]
+#   }
+# }
