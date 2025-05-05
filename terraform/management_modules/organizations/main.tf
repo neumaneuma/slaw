@@ -10,7 +10,11 @@ terraform {
 resource "aws_organizations_organization" "org" {
   feature_set = "ALL" # Enables all features including consolidated billing
   enabled_policy_types = [
-    "AISERVICES_OPT_OUT_POLICY", "BACKUP_POLICY", "RESOURCE_CONTROL_POLICY", "SERVICE_CONTROL_POLICY", "TAG_POLICY"
+    "AISERVICES_OPT_OUT_POLICY",
+    "BACKUP_POLICY",
+    "RESOURCE_CONTROL_POLICY",
+    "SERVICE_CONTROL_POLICY",
+    "TAG_POLICY"
   ]
 }
 

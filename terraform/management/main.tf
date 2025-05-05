@@ -14,31 +14,31 @@ provider "aws" {
 resource "random_uuid" "uuid" {}
 
 module "cloudtrail" {
-  source      = "../labs/cloudtrail"
+  source      = "../management_modules/cloudtrail"
   region      = var.region
   trail_name  = "permissions-audit-trail"
   bucket_name = "cloudtrail-audit-logs-${random_uuid.uuid.result}"
 }
 
 module "cloudformation" {
-  source = "../labs/cloudformation"
+  source = "../management_modules/cloudformation"
   region = "us-east-1"
 }
 
 module "cloudformation2" {
-  source = "../labs/cloudformation"
+  source = "../management_modules/cloudformation"
   region = "us-west-2"
 }
 
 module "cloudwatch" {
-  source = "../labs/cloudwatch"
+  source = "../management_modules/cloudwatch"
 }
 
 module "iam" {
-  source                   = "../labs/iam"
+  source                   = "../management_modules/iam"
   cloudtrail_s3_bucket_arn = module.cloudtrail.cloudtrail_s3_bucket_arn
 }
 
 module "organizations" {
-  source = "../labs/organizations"
+  source = "../management_modules/organizations"
 }

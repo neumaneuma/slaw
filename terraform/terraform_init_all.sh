@@ -2,7 +2,7 @@
 
 # List of directories to initialize
 DIRS=(
-    "aws"
+    "management"
     "state"
     "security-audit"
 )

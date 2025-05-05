@@ -5,3 +5,7 @@ output "cloudtrail_s3_bucket_arn" {
 output "cloudtrail_s3_bucket_name" {
   value = aws_s3_bucket.audit_logs.bucket
 }
+
+output "cloudtrail_arn" {
+  value = aws_cloudtrail.audit.arn
+}

@@ -2,6 +2,10 @@ provider "aws" {
   region = var.region
 }
 
+module "shared" {
+  source = "../shared"
+}
+
 resource "random_uuid" "uuid" {
 }
 
@@ -34,29 +38,11 @@ resource "aws_s3_bucket_public_access_block" "main_state" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+module "bucket_policy" {
+  source = "./bucket-policy"
 
-resource "aws_s3_bucket_policy" "policy" {
-  bucket = aws_s3_bucket.main_state.id
-  policy = data.aws_iam_policy_document.policy.json
-}
-
-data "aws_iam_policy_document" "policy" {
-  statement {
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::992382570951:user/playground",
-        "arn:aws:iam::222785560885:role/OrganizationAccountAccessRole"
-      ]
-    }
-
-    actions = [
-      "s3:*",
-    ]
-
-    resources = [
-      aws_s3_bucket.main_state.arn,
-      "${aws_s3_bucket.main_state.arn}/*",
-    ]
-  }
+  state_bucket_id  = aws_s3_bucket.main_state.id
+  state_bucket_arn = aws_s3_bucket.main_state.arn
+  state_file_name  = "security-audit"
+  account_id       = module.shared.account_mapping["security-audit"]
 }
