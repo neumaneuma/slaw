@@ -10,13 +10,10 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_cloudtrail" "audit" {
   name                          = var.trail_name
-  s3_bucket_name                = aws_s3_bucket.audit_logs.id
+  s3_bucket_name                = var.new_bucket_name
   include_global_service_events = true
   is_multi_region_trail         = true
-
-  depends_on = [
-    aws_s3_bucket_policy.audit_logs
-  ]
+  is_organization_trail         = true
 }
 
 # https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html
@@ -65,6 +62,7 @@ resource "aws_accessanalyzer_analyzer" "main" {
   type          = "ACCOUNT"
 }
 
+# maybe can delete after https://slaw.securosis.com/p/enabling-org-trail-centralized-logging-part-3?
 resource "aws_s3_bucket" "audit_logs" {
   bucket = var.bucket_name
 }

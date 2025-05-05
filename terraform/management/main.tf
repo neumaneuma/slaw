@@ -13,11 +13,22 @@ provider "aws" {
 
 resource "random_uuid" "uuid" {}
 
+data "terraform_remote_state" "security_audit" {
+  backend = "s3"
+
+  config = {
+    bucket = "main-state-ba1551d4-7af8-1aab-93d3-0499ce761296"
+    key    = "state/security-audit.tfstate"
+    region = "us-east-1"
+  }
+}
+
 module "cloudtrail" {
-  source      = "../management_modules/cloudtrail"
-  region      = var.region
-  trail_name  = "permissions-audit-trail"
-  bucket_name = "cloudtrail-audit-logs-${random_uuid.uuid.result}"
+  source          = "../management_modules/cloudtrail"
+  region          = var.region
+  trail_name      = "permissions-audit-trail"
+  bucket_name     = "cloudtrail-audit-logs-${random_uuid.uuid.result}"
+  new_bucket_name = data.terraform_remote_state.security_audit.outputs.s3_bucket_name
 }
 
 module "cloudformation" {
