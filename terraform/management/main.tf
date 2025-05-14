@@ -23,6 +23,10 @@ data "terraform_remote_state" "security_audit" {
   }
 }
 
+module "shared" {
+  source = "../shared"
+}
+
 module "cloudtrail" {
   source          = "../management_modules/cloudtrail"
   region          = var.region
@@ -52,4 +56,10 @@ module "iam" {
 
 module "organizations" {
   source = "../management_modules/organizations"
+}
+
+module "identitycenter" {
+  source                    = "../management_modules/identitycenter"
+  management_account_id     = module.shared.account_mapping["management"]
+  security_audit_account_id = module.shared.account_mapping["security-audit"]
 }

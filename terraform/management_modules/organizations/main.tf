@@ -11,6 +11,7 @@ resource "aws_organizations_organization" "org" {
   feature_set = "ALL" # Enables all features including consolidated billing
   aws_service_access_principals = [
     "cloudtrail.amazonaws.com",
+    "sso.amazonaws.com",
   ]
   enabled_policy_types = [
     "AISERVICES_OPT_OUT_POLICY",
