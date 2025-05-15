@@ -35,5 +35,17 @@ variable "security_accounts" {
     # "SecurityOperations": "storks-00elders+security_operations2@icloud.com",
     # "IAM" : "storks-00elders+iam2@icloud.com"
   }
+}
 
+variable "sso_admin_users" {
+  description = "A collection of SSO users and their attributes"
+  type        = map(map(string))
+  default = {
+    "johndoe" = {
+      display_name = "John Doe"
+      given_name   = "John"
+      family_name  = "Doe"
+      email        = "storks-00elders+ssouser1@icloud.com"
+    }
+  }
 }

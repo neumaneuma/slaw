@@ -1,31 +1,33 @@
 data "aws_ssoadmin_instances" "idp" {}
 
-resource "aws_identitystore_group" "this" {
+resource "aws_identitystore_group" "administrators" {
   display_name      = "Administrators"
   description       = "Full admin"
   identity_store_id = tolist(data.aws_ssoadmin_instances.idp.identity_store_ids)[0]
 }
 
-resource "aws_identitystore_user" "user1" {
+resource "aws_identitystore_user" "sso_user" {
+  for_each          = var.sso_admin_users
   identity_store_id = tolist(data.aws_ssoadmin_instances.idp.identity_store_ids)[0]
 
-  display_name = "John Doe"
-  user_name    = "johndoe"
+  user_name    = each.key
+  display_name = each.value.display_name
 
   name {
-    given_name  = "John"
-    family_name = "Doe"
+    given_name  = each.value.given_name
+    family_name = each.value.family_name
   }
 
   emails {
-    value = "storks-00elders+ssouser1@icloud.com"
+    value = each.value.email
   }
 }
 
-resource "aws_identitystore_group_membership" "user1" {
+resource "aws_identitystore_group_membership" "sso_user" {
+  for_each          = var.sso_admin_users
   identity_store_id = tolist(data.aws_ssoadmin_instances.idp.identity_store_ids)[0]
-  group_id          = aws_identitystore_group.this.group_id
-  member_id         = aws_identitystore_user.user1.user_id
+  group_id          = aws_identitystore_group.administrators.group_id
+  member_id         = aws_identitystore_user.sso_user[each.key].user_id
 }
 
 resource "aws_ssoadmin_permission_set" "admin_access" {
@@ -44,10 +46,10 @@ resource "aws_ssoadmin_account_assignment" "management_admin_access" {
   instance_arn       = tolist(data.aws_ssoadmin_instances.idp.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.admin_access.arn
 
-  principal_id   = aws_identitystore_group.this.group_id
+  principal_id   = aws_identitystore_group.administrators.group_id
   principal_type = "GROUP"
 
-  target_id   = var.management_account_id
+  target_id   = module.shared.account_mapping["management"]
   target_type = "AWS_ACCOUNT"
 }
 
@@ -55,9 +57,9 @@ resource "aws_ssoadmin_account_assignment" "security_audit_admin_access" {
   instance_arn       = tolist(data.aws_ssoadmin_instances.idp.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.admin_access.arn
 
-  principal_id   = aws_identitystore_group.this.group_id
+  principal_id   = aws_identitystore_group.administrators.group_id
   principal_type = "GROUP"
 
-  target_id   = var.security_audit_account_id
+  target_id   = module.shared.account_mapping["security-audit"]
   target_type = "AWS_ACCOUNT"
 }
