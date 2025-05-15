@@ -78,3 +78,74 @@ resource "aws_organizations_policy_attachment" "restrict_root_user" {
   policy_id = aws_organizations_policy.restrict_root_user.id
   target_id = each.value.id
 }
+
+# https://slaw.securosis.com/p/notwhat-lock-regions-double-negative-scp
+data "aws_iam_policy_document" "region_lockout" {
+  statement {
+    sid    = "RegionLockout"
+    effect = "Deny"
+    not_actions = [
+      "a4b:*",
+      "acm:*",
+      "aws-marketplace-management:*",
+      "aws-marketplace:*",
+      "aws-portal:*",
+      "budgets:*",
+      "ce:*",
+      "chime:*",
+      "cloudfront:*",
+      "config:*",
+      "cur:*",
+      "directconnect:*",
+      "ec2:DescribeRegions",
+      "ec2:DescribeTransitGateways",
+      "ec2:DescribeVpnGateways",
+      "fms:*",
+      "globalaccelerator:*",
+      "health:*",
+      "iam:*",
+      "importexport:*",
+      "kms:*",
+      "mobileanalytics:*",
+      "networkmanager:*",
+      "organizations:*",
+      "pricing:*",
+      "route53:*",
+      "route53domains:*",
+      "route53-recovery-cluster:*",
+      "route53-recovery-control-config:*",
+      "route53-recovery-readiness:*",
+      "s3:GetAccountPublic*",
+      "s3:ListAllMyBuckets",
+      "s3:ListMultiRegionAccessPoints",
+      "s3:PutAccountPublic*",
+      "shield:*",
+      "sts:*",
+      "support:*",
+      "trustedadvisor:*",
+      "waf-regional:*",
+      "waf:*",
+      "wafv2:*",
+      "wellarchitected:*"
+    ]
+    resources = ["*"]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:RequestedRegion"
+      values   = ["us-east-1", "us-west-2"]
+    }
+  }
+}
+
+resource "aws_organizations_policy" "region_lockout" {
+  name        = "RegionLockout"
+  description = "Deny all actions outside of us-east-1 and us-west-2, except for global services"
+  type        = "SERVICE_CONTROL_POLICY"
+  content     = data.aws_iam_policy_document.region_lockout.json
+}
+
+resource "aws_organizations_policy_attachment" "region_lockout" {
+  policy_id = aws_organizations_policy.region_lockout.id
+  target_id = aws_organizations_organization.org.roots[0].id
+}
