@@ -28,7 +28,6 @@ moved {
   to   = aws_sns_topic_subscription.security_alerts
 }
 
-
 moved {
   from = module.cloudtrail.aws_accessanalyzer_analyzer.main
   to   = aws_accessanalyzer_analyzer.main
@@ -37,4 +36,14 @@ moved {
 moved {
   from = module.cloudtrail.aws_cloudtrail.audit
   to   = aws_cloudtrail.audit
+}
+
+moved {
+  from = module.iam.aws_iam_role.ssm_instance
+  to   = aws_iam_role.ssm_instance
+}
+
+moved {
+  from = module.iam.aws_iam_role_policy_attachment.ssm_managed
+  to   = aws_iam_role_policy_attachment.ssm_managed
 }

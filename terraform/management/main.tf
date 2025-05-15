@@ -25,10 +25,6 @@ module "cloudformation2" {
   region = "us-west-2"
 }
 
-module "iam" {
-  source = "../management_modules/iam"
-}
-
 module "organizations" {
   source            = "../management_modules/organizations"
   ou_mapping        = var.ou_mapping

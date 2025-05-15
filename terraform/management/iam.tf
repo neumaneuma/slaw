@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 data "aws_iam_policy_document" "trust_policy" {
   statement {
     effect  = "Allow"
