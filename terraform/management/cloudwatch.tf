@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "billing_alert" {
   alarm_name          = "BillingAlert"
   comparison_operator = "GreaterThanThreshold"

@@ -32,22 +32,3 @@ resource "aws_iam_role_policy_attachment" "ssm_managed" {
 #   name = "test_profile"
 #   role = aws_iam_role.role.name
 # }
-
-data "aws_iam_policy_document" "cloudtrail_rw" {
-  statement {
-    actions = [
-      "s3:PutObject",
-      "s3:GetObject",
-    ]
-
-    resources = [
-      var.cloudtrail_s3_bucket_arn,
-    ]
-  }
-}
-
-resource "aws_iam_policy" "cloudtrail_rw" {
-  name        = "CloudtrailReadWrite"
-  description = "https://slaw.securosis.com/p/write-simple-iam-policy"
-  policy      = data.aws_iam_policy_document.cloudtrail_rw.json
-}

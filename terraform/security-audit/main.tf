@@ -42,6 +42,7 @@ resource "aws_s3_bucket_policy" "allow_public_access" {
 }
 
 # https://slaw.securosis.com/p/secure-bucket-centralized-logging-part-2-resource-policies
+# https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html
 data "aws_iam_policy_document" "policy" {
   statement {
     sid    = "AWSCloudTrailAclCheck20150319"

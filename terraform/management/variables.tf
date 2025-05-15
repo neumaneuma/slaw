@@ -4,6 +4,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "trail_name" {
+  description = "CloudTrail name"
+  type        = string
+  default     = "permissions-audit-trail"
+}
+
 variable "ou_mapping" {
   description = "OUs mapping"
   type        = map(string)
