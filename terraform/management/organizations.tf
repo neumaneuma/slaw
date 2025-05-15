@@ -37,7 +37,21 @@ data "aws_iam_policy_document" "protect_root_and_org" {
     ]
     resources = ["*"]
   }
+}
 
+resource "aws_organizations_policy" "protect_root_and_org" {
+  name        = "ProtectRootAndOrg"
+  description = "Prevent the ability to leave AWS Organizations"
+  type        = "SERVICE_CONTROL_POLICY"
+  content     = data.aws_iam_policy_document.protect_root_and_org.json
+}
+
+resource "aws_organizations_policy_attachment" "protect_root_and_org" {
+  policy_id = aws_organizations_policy.protect_root_and_org.id
+  target_id = aws_organizations_organization.org.roots[0].id
+}
+
+data "aws_iam_policy_document" "restrict_root_user" {
   # Deny any action taken by the root user
   statement {
     effect    = "Deny"
@@ -52,14 +66,15 @@ data "aws_iam_policy_document" "protect_root_and_org" {
   }
 }
 
-resource "aws_organizations_policy" "protect_root_and_org" {
-  name        = "ProtectRootAndOrg"
-  description = "Restrict the root account and the ability to leave AWS Organizations"
+resource "aws_organizations_policy" "restrict_root_user" {
+  name        = "RestrictRootUser"
+  description = "Restrict the root user"
   type        = "SERVICE_CONTROL_POLICY"
-  content     = data.aws_iam_policy_document.protect_root_and_org.json
+  content     = data.aws_iam_policy_document.restrict_root_user.json
 }
 
-resource "aws_organizations_policy_attachment" "protect_root_and_org" {
-  policy_id = aws_organizations_policy.protect_root_and_org.id
-  target_id = aws_organizations_organization.org.roots[0].id
+resource "aws_organizations_policy_attachment" "restrict_root_user" {
+  for_each  = { for k, v in aws_organizations_organizational_unit.top_level_ou : k => v if k != "Exceptions" }
+  policy_id = aws_organizations_policy.restrict_root_user.id
+  target_id = each.value.id
 }

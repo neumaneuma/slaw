@@ -114,3 +114,8 @@ moved {
   from = module.identitycenter.aws_ssoadmin_permission_set.admin_access
   to   = aws_ssoadmin_permission_set.admin_access
 }
+
+moved {
+  from = aws_organizations_account.security_ou_account["SecurityAudit"]
+  to   = aws_organizations_account.security_ou_account["LogArchive"]
+}

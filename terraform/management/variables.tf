@@ -30,10 +30,10 @@ variable "security_accounts" {
   description = "Mapping of account names to emails in the Security OU"
   type        = map(string)
   default = {
-    # "LogArchive": "storks-00elders+log_archive@icloud.com",
-    "SecurityAudit" : "storks-00elders+security_audit@icloud.com",
-    # "SecurityOperations": "storks-00elders+security_operations2@icloud.com",
-    # "IAM" : "storks-00elders+iam2@icloud.com"
+    "LogArchive" : "storks-00elders+log_archive@icloud.com",
+    "SecurityAudit1" : "storks-00elders+security_audit1@icloud.com",
+    "SecurityOperations" : "storks-00elders+security_operations3@icloud.com",
+    "IAM" : "storks-00elders+iam3@icloud.com"
   }
 }
 
