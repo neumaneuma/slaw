@@ -55,7 +55,9 @@ module "iam" {
 }
 
 module "organizations" {
-  source = "../management_modules/organizations"
+  source            = "../management_modules/organizations"
+  ou_mapping        = var.ou_mapping
+  security_accounts = var.security_accounts
 }
 
 module "identitycenter" {

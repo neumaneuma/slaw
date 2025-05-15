@@ -22,17 +22,19 @@ resource "aws_organizations_organization" "org" {
   ]
 }
 
-resource "aws_organizations_organizational_unit" "security" {
-  name      = "Security"
+resource "aws_organizations_organizational_unit" "top_level_ou" {
+  for_each  = var.ou_mapping
+  name      = each.value
   parent_id = aws_organizations_organization.org.roots[0].id
 }
 
-resource "aws_organizations_account" "security_audit" {
-  name                       = "SecurityAudit"
+resource "aws_organizations_account" "security_ou_account" {
+  for_each                   = var.security_accounts
+  name                       = each.key
   close_on_deletion          = true
   iam_user_access_to_billing = "DENY"
-  email                      = "storks-00elders+security_audit@icloud.com"
-  parent_id                  = aws_organizations_organizational_unit.security.id
+  email                      = each.value
+  parent_id                  = aws_organizations_organizational_unit.top_level_ou["Security"].id
 }
 
 data "aws_iam_policy_document" "protect_root_and_org" {
