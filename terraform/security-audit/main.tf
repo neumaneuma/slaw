@@ -7,11 +7,21 @@ terraform {
   }
 }
 
-resource "random_uuid" "uuid" {}
-
 module "shared" {
   source = "../shared"
 }
+
+provider "aws" {
+  region = var.region
+
+  # force use of the SecurityAudit account's service role OrganizationAccountAccessRole
+  assume_role {
+    role_arn     = "arn:aws:iam::${module.shared.account_mapping["security-audit"]}:role/OrganizationAccountAccessRole"
+    session_name = "tf-security-audit-OrganizationAccountAccessRole"
+  }
+}
+
+resource "random_uuid" "uuid" {}
 
 data "terraform_remote_state" "management" {
   backend = "s3"

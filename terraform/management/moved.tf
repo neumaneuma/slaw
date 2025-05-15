@@ -1,3 +1,5 @@
+# https://developer.hashicorp.com/terraform/language/modules/develop/refactoring
+
 moved {
   from = module.organizations.aws_organizations_organizational_unit.security
   to   = module.organizations.aws_organizations_organizational_unit.security["Security"]
