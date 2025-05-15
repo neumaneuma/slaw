@@ -25,12 +25,6 @@ module "cloudformation2" {
   region = "us-west-2"
 }
 
-module "organizations" {
-  source            = "../management_modules/organizations"
-  ou_mapping        = var.ou_mapping
-  security_accounts = var.security_accounts
-}
-
 module "identitycenter" {
   source                    = "../management_modules/identitycenter"
   management_account_id     = module.shared.account_mapping["management"]

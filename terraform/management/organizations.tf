@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 # Enable AWS Organizations
 resource "aws_organizations_organization" "org" {
   feature_set = "ALL" # Enables all features including consolidated billing

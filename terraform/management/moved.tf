@@ -47,3 +47,28 @@ moved {
   from = module.iam.aws_iam_role_policy_attachment.ssm_managed
   to   = aws_iam_role_policy_attachment.ssm_managed
 }
+
+moved {
+  from = module.organizations.aws_organizations_account.security_ou_account["SecurityAudit"]
+  to   = aws_organizations_account.security_ou_account["SecurityAudit"]
+}
+
+moved {
+  from = module.organizations.aws_organizations_organization.org
+  to   = aws_organizations_organization.org
+}
+
+moved {
+  from = module.organizations.aws_organizations_organizational_unit.top_level_ou["Security"]
+  to   = aws_organizations_organizational_unit.top_level_ou["Security"]
+}
+
+moved {
+  from = module.organizations.aws_organizations_policy.protect_root_and_org
+  to   = aws_organizations_policy.protect_root_and_org
+}
+
+moved {
+  from = module.organizations.aws_organizations_policy_attachment.protect_root_and_org
+  to   = aws_organizations_policy_attachment.protect_root_and_org
+}
