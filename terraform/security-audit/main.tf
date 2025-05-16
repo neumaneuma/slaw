@@ -136,3 +136,24 @@ data "aws_iam_policy_document" "policy" {
     }
   }
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "expire_objects" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    id     = "expire-objects-after-90-days"
+    status = "Enabled"
+
+    expiration {
+      days = 90
+    }
+
+    filter {
+      prefix = ""
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 90
+    }
+  }
+}
