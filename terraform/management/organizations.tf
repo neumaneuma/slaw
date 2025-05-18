@@ -184,3 +184,12 @@ resource "aws_account_alternate_contact" "operations" {
   email_address = "storks-00elders+${lower(each.value)}@icloud.com"
   phone_number  = "+1234567890"
 }
+
+resource "aws_cloudtrail_organization_delegated_admin_account" "cloudtrail_delegated_admin" {
+  account_id = module.shared.account_mapping["security-audit"]
+}
+
+resource "aws_organizations_delegated_administrator" "identity_center_delegated_admin" {
+  account_id        = module.shared.account_mapping["iam"]
+  service_principal = "sso.amazonaws.com"
+}
