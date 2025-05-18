@@ -23,6 +23,8 @@ provider "aws" {
 
 resource "random_uuid" "uuid" {}
 
+data "aws_caller_identity" "current" {}
+
 data "terraform_remote_state" "management" {
   backend = "s3"
 

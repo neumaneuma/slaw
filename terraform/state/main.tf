@@ -6,6 +6,8 @@ module "shared" {
   source = "../shared"
 }
 
+data "aws_caller_identity" "current" {}
+
 resource "random_uuid" "uuid" {
 }
 
@@ -38,6 +40,8 @@ resource "aws_s3_bucket_public_access_block" "main_state" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+# Give each account (via their root module) full control over their own state file (but not the full state bucket or other state files)
 module "bucket_policy" {
   source = "./bucket-policy"
 
