@@ -37,6 +37,24 @@ variable "security_accounts" {
   }
 }
 
+variable "workloads_ous" {
+  description = "OUs in the Workloads OU"
+  type        = list(string)
+  default = [
+    "Prod",
+    "NonProd",
+  ]
+}
+
+variable "nonprod_accounts" {
+  description = "Mapping of account names to emails in the NonProd OU"
+  type        = map(string)
+  default = {
+    "TestAccount1" : "storks-00elders+test_account1@icloud.com",
+    "SystemDesign" : "storks-00elders+system_design@icloud.com"
+  }
+}
+
 variable "sso_admin_users" {
   description = "A collection of SSO users and their attributes"
   type        = map(map(string))
