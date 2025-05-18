@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket       = "main-state-ba1551d4-7af8-1aab-93d3-0499ce761296"
-    key          = "state/security-audit.tfstate"
+    key          = "state/log-archive.tfstate"
     region       = "us-east-1"
     use_lockfile = true
   }
@@ -14,10 +14,10 @@ module "shared" {
 provider "aws" {
   region = var.region
 
-  # force use of the SecurityAudit account's service role OrganizationAccountAccessRole
+  # force use of the LogArchive account's service role OrganizationAccountAccessRole
   assume_role {
-    role_arn     = "arn:aws:iam::${module.shared.account_mapping["security-audit"]}:role/OrganizationAccountAccessRole"
-    session_name = "tf-security-audit-OrganizationAccountAccessRole"
+    role_arn     = "arn:aws:iam::${module.shared.account_mapping["log-archive"]}:role/OrganizationAccountAccessRole"
+    session_name = "tf-log-archive-OrganizationAccountAccessRole"
   }
 }
 

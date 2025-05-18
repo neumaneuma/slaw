@@ -43,6 +43,6 @@ module "bucket_policy" {
 
   state_bucket_id  = aws_s3_bucket.main_state.id
   state_bucket_arn = aws_s3_bucket.main_state.arn
-  state_file_name  = "security-audit"
-  account_id       = module.shared.account_mapping["security-audit"]
+  state_file_name  = "log-archive"
+  account_id       = module.shared.account_mapping["log-archive"]
 }

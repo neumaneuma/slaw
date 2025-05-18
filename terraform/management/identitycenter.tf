@@ -53,13 +53,13 @@ resource "aws_ssoadmin_account_assignment" "management_admin_access" {
   target_type = "AWS_ACCOUNT"
 }
 
-resource "aws_ssoadmin_account_assignment" "security_audit_admin_access" {
+resource "aws_ssoadmin_account_assignment" "log_archive_admin_access" {
   instance_arn       = tolist(data.aws_ssoadmin_instances.idp.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.admin_access.arn
 
   principal_id   = aws_identitystore_group.administrators.group_id
   principal_type = "GROUP"
 
-  target_id   = module.shared.account_mapping["security-audit"]
+  target_id   = module.shared.account_mapping["log-archive"]
   target_type = "AWS_ACCOUNT"
 }

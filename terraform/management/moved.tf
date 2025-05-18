@@ -119,3 +119,8 @@ moved {
   from = aws_organizations_account.security_ou_account["SecurityAudit"]
   to   = aws_organizations_account.security_ou_account["LogArchive"]
 }
+
+moved {
+  from = aws_ssoadmin_account_assignment.security_audit_admin_access
+  to   = aws_ssoadmin_account_assignment.log_archive_admin_access
+}
