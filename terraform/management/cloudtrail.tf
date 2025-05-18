@@ -8,8 +8,6 @@ data "terraform_remote_state" "log_archive" {
   }
 }
 
-data "aws_caller_identity" "current" {}
-
 resource "aws_cloudtrail" "audit" {
   name                          = var.trail_name
   s3_bucket_name                = data.terraform_remote_state.log_archive.outputs.s3_bucket_name
