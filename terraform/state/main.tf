@@ -42,11 +42,20 @@ resource "aws_s3_bucket_public_access_block" "main_state" {
 }
 
 # Give each account (via their root module) full control over their own state file (but not the full state bucket or other state files)
-module "bucket_policy" {
+module "bucket_policy_log_archive" {
   source = "./bucket-policy"
 
   state_bucket_id  = aws_s3_bucket.main_state.id
   state_bucket_arn = aws_s3_bucket.main_state.arn
   state_file_name  = "log-archive"
   account_id       = module.shared.account_mapping["log-archive"]
+}
+
+module "bucket_policy_iam" {
+  source = "./bucket-policy"
+
+  state_bucket_id  = aws_s3_bucket.main_state.id
+  state_bucket_arn = aws_s3_bucket.main_state.arn
+  state_file_name  = "iam"
+  account_id       = module.shared.account_mapping["iam"]
 }

@@ -13,3 +13,15 @@ variable "account_mapping" {
 output "account_mapping" {
   value = var.account_mapping
 }
+
+variable "sso_user_ids" {
+  description = "A collection of SSO user IDs"
+  type        = map(string)
+  default = {
+    "johndoe" = "e4584428-5021-7063-ebfd-4814159e7ae0"
+  }
+}
+
+output "sso_user_ids" {
+  value = var.sso_user_ids
+}
