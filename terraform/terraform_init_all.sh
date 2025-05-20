@@ -5,6 +5,8 @@ DIRS=(
     "management"
     "state"
     "security-audit"
+    "iam"
+    "log-archive"
 )
 
 

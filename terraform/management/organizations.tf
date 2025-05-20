@@ -3,7 +3,9 @@ resource "aws_organizations_organization" "org" {
   feature_set = "ALL" # Enables all features including consolidated billing
   aws_service_access_principals = [
     "cloudtrail.amazonaws.com",
-    "sso.amazonaws.com", "account.amazonaws.com",
+    "sso.amazonaws.com",
+    "account.amazonaws.com",
+    "guardduty.amazonaws.com",
   ]
   enabled_policy_types = [
     "AISERVICES_OPT_OUT_POLICY",
@@ -192,4 +194,10 @@ resource "aws_cloudtrail_organization_delegated_admin_account" "cloudtrail_deleg
 resource "aws_organizations_delegated_administrator" "identity_center_delegated_admin" {
   account_id        = module.shared.account_mapping["iam"]
   service_principal = "sso.amazonaws.com"
+}
+
+resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin" {
+  depends_on = [aws_organizations_organization.org]
+
+  admin_account_id = module.shared.account_mapping["security-audit"]
 }

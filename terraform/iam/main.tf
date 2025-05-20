@@ -22,7 +22,7 @@ data "aws_caller_identity" "current" {}
 data "aws_ssoadmin_instances" "idp" {}
 
 module "shared" {
-  source = "../shared"
+  source = "../modules/shared"
 }
 
 # Groups and their membership

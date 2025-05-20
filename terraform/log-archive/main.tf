@@ -8,7 +8,7 @@ terraform {
 }
 
 module "shared" {
-  source = "../shared"
+  source = "../modules/shared"
 }
 
 provider "aws" {

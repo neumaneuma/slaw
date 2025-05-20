@@ -1,28 +1,22 @@
 terraform {
   backend "s3" {
     bucket       = "main-state-ba1551d4-7af8-1aab-93d3-0499ce761296"
-    key          = "state/aws.tfstate"
+    key          = "state/security-audit.tfstate"
     region       = "us-east-1"
     use_lockfile = true
   }
 }
 
-provider "aws" {
-  region = var.region
-}
-
-data "aws_caller_identity" "current" {}
-
 module "shared" {
   source = "../modules/shared"
 }
 
-module "cloudformation" {
-  source = "../modules/cloudformation"
+module "guardduty-us-east-1" {
+  source = "../modules/guardduty"
   region = "us-east-1"
 }
 
-module "cloudformation2" {
-  source = "../modules/cloudformation"
+module "guardduty-us-west-2" {
+  source = "../modules/guardduty"
   region = "us-west-2"
 }
