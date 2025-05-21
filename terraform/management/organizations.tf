@@ -196,8 +196,15 @@ resource "aws_organizations_delegated_administrator" "identity_center_delegated_
   service_principal = "sso.amazonaws.com"
 }
 
-resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin" {
+resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin_us_east_1" {
   depends_on = [aws_organizations_organization.org]
+
+  admin_account_id = module.shared.account_mapping["security-audit"]
+}
+
+resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin_us_west_2" {
+  depends_on = [aws_organizations_organization.org]
+  provider   = aws.us_west_2
 
   admin_account_id = module.shared.account_mapping["security-audit"]
 }
