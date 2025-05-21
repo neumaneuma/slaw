@@ -7,16 +7,27 @@ terraform {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 module "shared" {
   source = "../modules/shared"
 }
 
+locals {
+  role_arn     = "arn:aws:iam::${module.shared.account_mapping["security-audit"]}:role/OrganizationAccountAccessRole"
+  session_name = "tf-security-audit-OrganizationAccountAccessRole"
+}
+
 module "guardduty-us-east-1" {
-  source = "../modules/guardduty"
-  region = "us-east-1"
+  source       = "./guardduty"
+  region       = "us-east-1"
+  role_arn     = local.role_arn
+  session_name = local.session_name
 }
 
 module "guardduty-us-west-2" {
-  source = "../modules/guardduty"
-  region = "us-west-2"
+  source       = "./guardduty"
+  region       = "us-west-2"
+  role_arn     = local.role_arn
+  session_name = local.session_name
 }
