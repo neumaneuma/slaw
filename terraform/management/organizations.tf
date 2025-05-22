@@ -4,8 +4,9 @@ resource "aws_organizations_organization" "org" {
   aws_service_access_principals = [
     "cloudtrail.amazonaws.com",
     "sso.amazonaws.com",
-    "account.amazonaws.com",
+    "account.amazonaws.com", # for setting alternate contacts in your organization
     "guardduty.amazonaws.com",
+    "securityhub.amazonaws.com"
   ]
   enabled_policy_types = [
     "AISERVICES_OPT_OUT_POLICY",
@@ -205,6 +206,12 @@ resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin_u
 resource "aws_guardduty_organization_admin_account" "guardduty_delegated_admin_us_west_2" {
   depends_on = [aws_organizations_organization.org]
   provider   = aws.us_west_2
+
+  admin_account_id = module.shared.account_mapping["security-audit"]
+}
+
+resource "aws_securityhub_organization_admin_account" "securityhub_delegated_admin" {
+  depends_on = [aws_organizations_organization.org]
 
   admin_account_id = module.shared.account_mapping["security-audit"]
 }

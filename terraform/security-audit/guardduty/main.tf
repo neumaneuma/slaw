@@ -11,8 +11,8 @@ provider "aws" {
 
   # force use of the SecurityAudit account's service role OrganizationAccountAccessRole
   assume_role {
-    role_arn     = var.role_arn
-    session_name = var.session_name
+    role_arn     = "arn:aws:iam::${var.security_audit_account_id}:role/OrganizationAccountAccessRole"
+    session_name = "tf-security-audit-OrganizationAccountAccessRole"
   }
 }
 

@@ -8,6 +8,11 @@ output "organization_id" {
   value       = aws_organizations_organization.org.id
 }
 
+output "root_ou_id" {
+  description = "The ID of the AWS Organization root OU"
+  value       = aws_organizations_organization.org.roots[0].id
+}
+
 output "current_aws_arn" {
   value = data.aws_caller_identity.current.arn
 }

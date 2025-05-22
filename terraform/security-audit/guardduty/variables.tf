@@ -3,12 +3,7 @@ variable "region" {
   type        = string
 }
 
-variable "session_name" {
-  description = "Session name for the role"
-  type        = string
-}
-
-variable "role_arn" {
-  description = "Role ARN to assume"
+variable "security_audit_account_id" {
+  description = "Security Audit account ID"
   type        = string
 }
