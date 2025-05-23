@@ -46,6 +46,7 @@ locals {
     "security-audit" = module.shared.account_mapping["security-audit"],
     "iam"            = module.shared.account_mapping["iam"],
     "log-archive"    = module.shared.account_mapping["log-archive"],
+    "system-design"  = module.shared.account_mapping["system-design"],
   }
   # the member accounts that need access to the data resource "terraform_remote_state" for the management account state file
   member_accounts_that_need_read_access_to_management_account_state_file = {

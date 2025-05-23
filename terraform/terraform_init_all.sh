@@ -7,6 +7,7 @@ DIRS=(
     "security-audit"
     "iam"
     "log-archive"
+    "system-design"
 )
 
 
