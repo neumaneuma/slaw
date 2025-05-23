@@ -10,10 +10,6 @@ def get_s3_client_with_assumed_role(
 ) -> boto3.client:
     sts = boto3.client("sts", region_name=region)
     role_name = "external_user_file_storage_role"
-    assume_role_kwargs = {
-        "RoleArn": f"arn:aws:iam::193672753492:role/{role_name}",
-        "RoleSessionName": f"{role_name}-{customer_username}",
-    }
     session_policy = {
         "Statement": [
             {
@@ -31,7 +27,14 @@ def get_s3_client_with_assumed_role(
             },
         ]
     }
-    assume_role_kwargs["Policy"] = json.dumps(session_policy)
+
+    assume_role_kwargs = {
+        "RoleArn": f"arn:aws:iam::193672753492:role/{role_name}",
+        "RoleSessionName": f"{role_name}-{customer_username}",
+        "Policy": json.dumps(session_policy),
+        "DurationSeconds": 900,  # min 15 min, max 1 hour
+    }
+
     response = sts.assume_role(**assume_role_kwargs)
     creds = response["Credentials"]
     return boto3.client(
@@ -44,7 +47,7 @@ def get_s3_client_with_assumed_role(
 
 
 def external_bucket_access(customer_username: str) -> None:
-    file_name = "c1.txt"
+    file_name = "d1.txt"
     s3_client = get_s3_client_with_assumed_role(customer_username)
     try:
         s3_client.put_object(
