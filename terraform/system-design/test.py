@@ -1,15 +1,37 @@
 import boto3
+import json
+from botocore.exceptions import ClientError
+
+BUCKET_NAME = "test-bucket-112469fa-2f67-a1b5-39cd-1634918e2d52"
 
 
 def get_s3_client_with_assumed_role(
-    session_name: str, customer_username: str, region: str = "us-east-1"
+    customer_username: str, region: str = "us-east-1"
 ) -> boto3.client:
     sts = boto3.client("sts", region_name=region)
+    role_name = "external_user_file_storage_role"
     assume_role_kwargs = {
-        "RoleArn": "arn:aws:iam::193672753492:role/external_user_file_storage_role",
-        "RoleSessionName": session_name,
+        "RoleArn": f"arn:aws:iam::193672753492:role/{role_name}",
+        "RoleSessionName": f"{role_name}-{customer_username}",
     }
-    # assume_role_kwargs["Policy"] = json.dumps({})
+    session_policy = {
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": ["s3:*"],
+                "Resource": [
+                    f"arn:aws:s3:::{BUCKET_NAME}/{customer_username}/*",
+                ],
+            },
+            {
+                "Effect": "Allow",
+                "Action": ["s3:ListBucket"],
+                "Resource": [f"arn:aws:s3:::{BUCKET_NAME}"],
+                "Condition": {"StringLike": {"s3:prefix": [f"{customer_username}/*"]}},
+            },
+        ]
+    }
+    assume_role_kwargs["Policy"] = json.dumps(session_policy)
     response = sts.assume_role(**assume_role_kwargs)
     creds = response["Credentials"]
     return boto3.client(
@@ -21,30 +43,27 @@ def get_s3_client_with_assumed_role(
     )
 
 
-# Example usage:
-session_name = "test-session"
-session_policy = {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": ["s3:ListBucket"],
-            "Resource": "arn:aws:s3:::test-bucket-<uuid>",
-        }
-    ],
-}
-
-
 def external_bucket_access(customer_username: str) -> None:
-    s3_client = get_s3_client_with_assumed_role(session_name, customer_username)
-    bucket_name = "test-bucket-112469fa-2f67-a1b5-39cd-1634918e2d52"
-    # s3_client.put_object(
-    #     Bucket=bucket_name,
-    #     Key="cust3/b3.txt",
-    #     Body="Hello, world!"
-    # )
-    response = s3_client.list_objects_v2(Bucket=bucket_name)
-    print([c["Key"] for c in response["Contents"]])
+    file_name = "c1.txt"
+    s3_client = get_s3_client_with_assumed_role(customer_username)
+    try:
+        s3_client.put_object(
+            Bucket=BUCKET_NAME,
+            Key=f"{customer_username}/{file_name}",
+            # Key=f"cust3/{file_name}",
+            Body="Hello, world!",
+        )
+    except ClientError as e:
+        print(f"Unexpected error: {e}")
+
+    try:
+        response = s3_client.list_objects_v2(
+            Bucket=BUCKET_NAME, Prefix=f"{customer_username}/"
+        )
+        # response = s3_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=f"cust2/")
+        print([c["Key"] for c in response["Contents"]])
+    except ClientError as e:
+        print(f"Unexpected error: {e}")
 
 
 external_bucket_access("cust1")
