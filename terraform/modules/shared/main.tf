@@ -8,7 +8,6 @@ variable "account_mapping" {
     "log-archive"         = 222785560885
     "security-operations" = 383313559638
     "test-account1"       = 334935312185
-    "system-design"       = 193672753492
   }
 }
 

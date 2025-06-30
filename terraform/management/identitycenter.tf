@@ -107,14 +107,3 @@ resource "aws_ssoadmin_account_assignment" "test_account1_admin_access" {
   target_id   = module.shared.account_mapping["test-account1"]
   target_type = "AWS_ACCOUNT"
 }
-
-resource "aws_ssoadmin_account_assignment" "system_design_admin_access" {
-  instance_arn       = tolist(data.aws_ssoadmin_instances.idp.arns)[0]
-  permission_set_arn = aws_ssoadmin_permission_set.admin_access.arn
-
-  principal_id   = aws_identitystore_group.administrators.group_id
-  principal_type = "GROUP"
-
-  target_id   = module.shared.account_mapping["system-design"]
-  target_type = "AWS_ACCOUNT"
-}
